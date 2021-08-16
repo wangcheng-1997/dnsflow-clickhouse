@@ -10,7 +10,7 @@ object JedisPoolUser {
   val properties = DNSUtils.loadConf()
 
   val MASTER_NAME = "mymaster"
-  val TIME_OUT = 30000
+  val TIME_OUT = 150000
 
   def getJedisPool(): JedisSentinelPool = {
 

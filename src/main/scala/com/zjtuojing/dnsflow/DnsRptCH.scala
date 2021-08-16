@@ -886,7 +886,7 @@ object DnsRptCH {
             && !domain.contains("getCached")
             && !domain.contains("BlinkAP")
             && logTimestamp >= appTime && logTimestamp < appTime + 1000 * 60 * 5 //时间过滤
-            && util.IpUtil.isInRange(serverIP, "218.108.248.192/26")
+//            && util.IpUtil.isInRange(serverIP, "218.108.248.192/26")
             && QR == true
           ) {
 
@@ -1029,10 +1029,10 @@ object DnsRptCH {
       //创建Redis连接
       logger.info("init jedis...")
       val jedisPool = JedisPool.getJedisPool()
-      val jedisPoolUser = JedisPoolUser.getJedisPool()
+//      val jedisPoolUser = JedisPoolUser.getJedisPool()
 
       val jedis: Jedis = JedisPool.getJedisClient(jedisPool)
-      val jedisUser: Jedis = JedisPoolUser.getJedisClient(jedisPoolUser)
+//      val jedisUser: Jedis = JedisPoolUser.getJedisClient(jedisPoolUser)
 
       //读取Mysql客户名ip规则数据
       logger.info("读取Mysql客户名ip规则数据...")
@@ -1050,15 +1050,15 @@ object DnsRptCH {
       logger.info("读取aip业务网段...")
       val businessIpRules = getBusinessIpRules(spark)
 
-      //读取Redis在线用户表
-      logger.info("读取Redis在线用户表...")
-      val userMap = getUserName(jedisUser)
-      val userMapValue: Broadcast[Map[String, String]] = sc.broadcast(userMap)
-
-      //读取Redis详细信息
-      logger.info("读取Redis详细信息...")
-      val phoneAndAddress = getPhoneNumAndAddress(jedisUser)
-      val phoneAndAddressValue: Broadcast[Map[String, String]] = sc.broadcast(phoneAndAddress)
+//      //读取Redis在线用户表
+//      logger.info("读取Redis在线用户表...")
+//      val userMap = getUserName(jedisUser)
+//      val userMapValue: Broadcast[Map[String, String]] = sc.broadcast(userMap)
+//
+//      //读取Redis详细信息
+//      logger.info("读取Redis详细信息...")
+//      val phoneAndAddress = getPhoneNumAndAddress(jedisUser)
+//      val phoneAndAddressValue: Broadcast[Map[String, String]] = sc.broadcast(phoneAndAddress)
 
       //读取权威域名详细信息
       logger.info("读取权威域名详细信息...")
@@ -1114,9 +1114,9 @@ object DnsRptCH {
       getDetailReport(detailReportRDD, endTime, now, spark)
 
 
-      //TODO 1.4.1 计算用户相关信息
-      logger.info("计算用户相关信息...")
-      getUserInfo(baseRDD, userMapValue.value, phoneAndAddressValue.value, endTime, businessIpRules, inNetRule, sc, spark)
+//      //TODO 1.4.1 计算用户相关信息
+//      logger.info("计算用户相关信息...")
+//      getUserInfo(baseRDD, userMapValue.value, phoneAndAddressValue.value, endTime, businessIpRules, inNetRule, sc, spark)
 
       //TODO 1.5 Aip运营商排名
       logger.info("Aip运营商排名...")
@@ -1139,9 +1139,9 @@ object DnsRptCH {
       ClickUtils.clickhouseWrite(result_df, "dns_flow_clear")
 
       jedis.close()
-      jedisUser.close()
+//      jedisUser.close()
       jedisPool.destroy()
-      jedisPoolUser.destroy()
+//      jedisPoolUser.destroy()
 
     } catch {
       case e: FileNotFoundException =>
